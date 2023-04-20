@@ -1,4 +1,4 @@
-Graph superclass contains subclasses (Vertex, Edge). Methods of the graph class:\n
+Graph superclass contains subclasses (Vertex, Edge). Methods of the graph class:
     - vertices() -> Return vector of vertex objects
     - numVertices() -> Return number of vertices
     - edges() -> Return vector of edge objects
