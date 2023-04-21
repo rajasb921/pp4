@@ -34,6 +34,10 @@ class Vertex{
             return;
         }
 
+        void removeEdge(Edge<Tvertex, Tedge> e){
+            edges.pop(  )
+        }
+
         EdgeList incidentEdges(){               // Return incident edges
             return edges; 
         }
@@ -59,6 +63,18 @@ class Vertex{
             }
             
             return false;
+        }
+
+        // Disconnects edge from given vertex, but DOES NOT DELETE IT 
+        //helpful for case where edge should still exist, but remove it
+        //from Vertex::edges --- might not be necessary 
+        void disconnectEdge(Edge<Tvertex, Tedge> e){
+            //loop through incident edges to find a match
+            for (size_t i = 0; i < this->incidentEdges().size(); ++i){
+                if (*e == *this->incidentEdges()[i]){
+                    edges.erase(edges.begin() + i);
+                }
+            }
         }
 };
 
@@ -101,7 +117,7 @@ class Edge{
         Vertex<Tvertex,Tedge> opposite(Vertex<Tvertex,Tedge> _v){       // Return vertex opposite to vertex given 'v'
             
             Vertex<Tvertex,Tedge> oppositeVertex;
-            for (size_t i=0; i<vertices.size(); i++){
+            for (size_t i = 0; i < vertices.size(); i++){
                 if (*(*vertices[i]) != *_v){
                     oppositeVertex = *vertices[i];
                     break;
@@ -111,17 +127,17 @@ class Edge{
             return oppositeVertex;
         }
 
-        bool isAdjacentTo(Edge<Tvertex,Tedge> f){         // Return true if edge is adjacent to given edge 'e'
+        bool isAdjacentTo(Edge<Tvertex,Tedge> f){         // Return true if edge is adjacent to given edge 'f'
             if (*f == e){
                 return false;    // Edge is NOT adjacent to itself
             }
             
-            for (size_t i=0; i<vertices.size(); i++){
+            for (size_t i = 0; i < vertices.size(); i++){
                 // Choose vertex 'v'
                 Vertex<Tvertex,Tedge> *v;
                 v = vertices[i];
 
-                for (size_t j=0; j<v->incidentEdges().size(); j++){
+                for (size_t j = 0; j < v->incidentEdges().size(); j++){
                     Edge<Tvertex,Tedge> *tempEdge;
                     tempEdge = v->incidentEdges()[j];
                     if (*(*tempEdge) == *f){
@@ -148,6 +164,7 @@ class Edge{
 // Graph Object
 /*
     - Contains number of vertices currently in graph
+    - Contains number of edges currently in graph
     - Contains vector storing all vertex objects
     - Contains vector storing all edge objects
 */
@@ -157,7 +174,7 @@ class Graph{
         // Number of vertices in the graph
         int n_Vertices = 0;
 
-        // Number of vertices in the graph
+        // Number of edges in the graph
         int n_Edges = 0;
         
         // List of all vertices in the graph
@@ -167,6 +184,7 @@ class Graph{
         // List of all edges in the graph
         typedef std::vector<Edge<Tvertex,Tedge>> EdgeList;
         EdgeList edge_list;
+
     public:
         Graph(){};       // Default constructor
         Graph(std::string filename){        // Create graph from file
@@ -248,8 +266,35 @@ class Graph{
 
         void eraseVertex(Vertex<Tvertex,Tedge> v){
             // Disconnect edges from end vertices, and remove them
+            Vertex<Tvertex, Tedge>* v_ptr = nullptr; // to not loose track of selected vertex
+            size_t v_index; // for deleting (erase()) the vertex from the vector
+
+            //find if vertex v is in vertex_list
+            for (size_t i = 0; i < vertex_list.size(); ++i){
+                if (*vertex_list[i] == *v){
+                    v_ptr = &vertex_list[i];
+                    v_index = i;
+                    break;
+                }
+            }
+
+            if (v_ptr = nullptr){
+                std::cout << "Vertex not found!" << std::endl;
+                return;
+            }
+
+            // loop through incident edges of v, deleting them along the way
+            for (size_t i = 0; i < (*v_ptr).incidentEdges().size(); ++i){
+                Edge<Tvertex, Tedge>* e;
+                while(!(*v_ptr).edges.empty()){
+                    edges.pop_back();
+                }
+
+            }
+
+
             // Remove vertex
-            // Deal with disconnected vertices?
+            // Deal with disconnected vertices? // use pointer to not lose track
         }
 
 };
