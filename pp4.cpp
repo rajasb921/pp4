@@ -47,6 +47,10 @@ int main(){
     for (int i=0; i<g.edges().size(); i++){
         std::cout << *(g.edges()[i]) << "\n";
     }
+
+    Graph<std::string, float> graph1("input.txt");
+
+
     return EXIT_SUCCESS;
 }
 

@@ -2,6 +2,9 @@
 #define GRAPH_H
 #include <vector>
 #include <cstdlib>
+#include <string>
+#include <fstream>
+#include <sstream>
 
 // Edge definition?
 template <typename Tvertex, typename Tedge>
@@ -59,6 +62,10 @@ class Vertex{
             }
             
             return false;
+        }
+
+        void set_v(Tvertex _v){
+            v = _v;
         }
 };
 
@@ -172,8 +179,29 @@ class Graph{
     public:
         Graph(){};       // Default constructor
         Graph(std::string filename){        // Create graph from file
-            std::cout << "Not yet complete :(\n";
+            
+            std::ifstream iFile(filename);
+            if(!iFile.is_open()) std::cout << "ERROR: File not read!\n";
+
+            std::string line_buff, temp_buff, v_buff, e_buff;
+
+            Vertex<std::string, float> vertex(v_buff);
+
+            getline(iFile, line_buff); //first line of input.txt
+            std::istringstream stream(line_buff);
+
+            //Read in all values of first line
+            do{
+                std::cout << "temp_buff:" << temp_buff << std::endl;
+                vertex.set_v(temp_buff);
+                insertVertex(vertex);
+            } while(getline(stream, temp_buff, ','));
+        
+
+        
+
         }
+
 
         VertexList vertices(){            // Return vector of vertices
             return vertex_list;
@@ -193,7 +221,7 @@ class Graph{
 
         void insertVertex(Vertex<Tvertex,Tedge> v){       // Add Vertex to graph
             // Check if vertex already exists
-            for (int i=0; i<vertex_list.size(); i++){
+            for (size_t i=0; i < vertex_list.size(); i++){
                 if (*v == *vertex_list[i]){
                     std::cout << "Vertex insert failed: Vertex already exists\n";
                     return;
@@ -231,7 +259,7 @@ class Graph{
                 }
             }
 
-            // Add edge
+            // Add edgeRun
             if (vertex1 && vertex2){
                 x.addVertex(v);
                 x.addVertex(u);
@@ -239,7 +267,7 @@ class Graph{
                 u.addEdge(x);
                 edge_list.push_back(x);
                 n_Edges++;
-                std::cout << "Edge insert successful\n";
+                std::cout << "Edge insert successful\n"; //Move/rename a branch, together with
                 return;
             }else{
                 std::cout << "Edge insert failed: Vertices do not exist\n";
