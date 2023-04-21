@@ -25,7 +25,7 @@ class Vertex{
             edges = _edges;
         }
 
-        Tedge operator*(){                      // Dereference
+        Tvertex operator*(){                      // Dereference
             return v;
         }
 
@@ -44,13 +44,13 @@ class Vertex{
                 return false;        // Vertex is NOT adjacent to itself
             }
             
-            for(int i=0; i<edges.size(); i++){
+            for(size_t i=0; i < edges.size(); i++){
                 // Choose edge 'e'
-                Edge<Tvertex,Tedge> *e = new Edge<Tvertex,Tedge>;
+                Edge<Tvertex,Tedge> *e;
                 e = edges[i];
                 // Iterate through end vertices of 'e' , return true after finding 'v'
-                for (int j=0; j<e->endVertices().size(); j++){
-                    Vertex<Tvertex,Tedge> *u = new Vertex<Tvertex,Tedge>;
+                for (size_t j = 0; j < e->endVertices().size(); j++){
+                    Vertex<Tvertex,Tedge> *u;
                     u = e->endVertices()[j];
                     if(*(*u) == *_v){
                         return true;
@@ -83,7 +83,6 @@ class Edge{
         Tedge operator*(){          // Dereference
             return e;
         }
-
         
         void addVertex(Vertex<Tvertex,Tedge> v){          // Add vertex
             if (vertices.size() == 2){
@@ -102,7 +101,7 @@ class Edge{
         Vertex<Tvertex,Tedge> opposite(Vertex<Tvertex,Tedge> _v){       // Return vertex opposite to vertex given 'v'
             
             Vertex<Tvertex,Tedge> oppositeVertex;
-            for (int i=0; i<vertices.size(); i++){
+            for (size_t i=0; i<vertices.size(); i++){
                 if (*(*vertices[i]) != *_v){
                     oppositeVertex = *vertices[i];
                     break;
@@ -117,14 +116,13 @@ class Edge{
                 return false;    // Edge is NOT adjacent to itself
             }
             
-            for (int i=0; i<vertices.size(); i++){
+            for (size_t i=0; i<vertices.size(); i++){
                 // Choose vertex 'v'
-                Vertex<Tvertex,Tedge> *v = new Vertex<Tvertex,Tedge>; 
+                Vertex<Tvertex,Tedge> *v;
                 v = vertices[i];
 
-                // Iterate through all edges of 'v', return true after finding 'f'
-                for (int j=0; j<v->incidentEdges().size(); j++){
-                    Edge<Tvertex,Tedge> *tempEdge =  new Edge<Tvertex,Tedge>;
+                for (size_t j=0; j<v->incidentEdges().size(); j++){
+                    Edge<Tvertex,Tedge> *tempEdge;
                     tempEdge = v->incidentEdges()[j];
                     if (*(*tempEdge) == *f){
                         return true;
@@ -137,7 +135,7 @@ class Edge{
 
 
         bool isIncidentOn(Vertex<Tvertex,Tedge> v){        // Return true if edge is incident on vertex 'v'
-            for (int i=0; i<vertices.size(); i++){
+            for (size_t i=0; i<vertices.size(); i++){
                 if (*(*vertices[i]) == *v){
                     return true;
                 }
@@ -193,7 +191,7 @@ class Graph{
 
         void insertVertex(Vertex<Tvertex,Tedge> v){       // Add Vertex to graph
             // Check if vertex already exists
-            for (int i=0; i<vertex_list.size(); i++){
+            for (size_t i=0; i<vertex_list.size(); i++){
                 if (*v == *vertex_list[i]){
                     std::cout << "Vertex insert failed: Vertex already exists\n";
                     return;
@@ -206,7 +204,7 @@ class Graph{
 
         void insertEdge(Vertex<Tvertex,Tedge> v, Vertex<Tvertex,Tedge> u, Edge<Tvertex,Tedge> x){    // Add edge to graoh
             // Check if edge already exists
-            for (int i=0; i<edge_list.size(); i++){
+            for (size_t i=0; i<edge_list.size(); i++){
                 if (*x == *edge_list[i]){
                     std::cout << "Edge insert failed: Edge already exists\n";
                     return;
@@ -215,7 +213,7 @@ class Graph{
 
             // Check if v1 exists
             bool vertex1 = false;
-            for (int i=0; i<vertex_list.size(); i++){
+            for (size_t i=0; i<vertex_list.size(); i++){
                 if (*v == *vertex_list[i]){
                     vertex1 = true;
                     break;
@@ -224,7 +222,7 @@ class Graph{
 
             // Check if v2 exists
             bool vertex2 = false;
-            for (int i=0; i<vertex_list.size(); i++){
+            for (size_t i=0; i<vertex_list.size(); i++){
                 if (*u == *vertex_list[i]){
                     vertex2 = true;
                     break;
