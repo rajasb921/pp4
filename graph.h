@@ -230,8 +230,8 @@ class Graph{
 
                 //make edge (first make "verticies")
                 Edge<std::string, float> e(e_float);
-
                 this->insertEdge(v1, v2, e);
+
                 i++;
             }
 
@@ -277,9 +277,12 @@ class Graph{
                 }
             }
 
+            std::cout << "\nInside insertEdge():\n";
             // Check if v1 exists
             bool vertex1 = false;
             for (int i=0; i<vertex_list.size(); i++){
+                std::cout << "*v=" << *v << std::endl;
+                std::cout << "*vertex_list (at i=" << i << ")=" << *vertex_list[i] << std::endl;
                 if (*v == *vertex_list[i]){
                     vertex1 = true;
                     break;
@@ -289,6 +292,8 @@ class Graph{
             // Check if v2 exists
             bool vertex2 = false;
             for (int i=0; i<vertex_list.size(); i++){
+                std::cout << "*u=" << *u << std::endl;
+                std::cout << "*vertex_list (at i=" << i << ")=" << *vertex_list[i] << std::endl;
                 if (*u == *vertex_list[i]){
                     vertex2 = true;
                     break;
