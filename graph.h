@@ -65,6 +65,7 @@ class Vertex{
             return false;
         }
 
+        /*
         // Disconnects edge from given vertex, but DOES NOT DELETE IT 
         //helpful for case where edge should still exist, but remove it
         //from Vertex::edges --- might not be necessary 
@@ -76,6 +77,7 @@ class Vertex{
                 }
             }
         }
+        */
 };
 
 // Edge object
@@ -264,6 +266,7 @@ class Graph{
             return;
         }
 
+        /*
         void eraseVertex(Vertex<Tvertex,Tedge> v){
             // Disconnect edges from end vertices, and remove them
             Vertex<Tvertex, Tedge>* v_ptr = nullptr; // to not loose track of selected vertex
@@ -296,6 +299,7 @@ class Graph{
             // Remove vertex
             // Deal with disconnected vertices? // use pointer to not lose track
         }
+        */
 
 };
 
