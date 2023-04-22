@@ -1,7 +1,11 @@
-#ifndef GRPAH_H
+#ifndef GRAPH_H
 #define GRAPH_H
 #include <vector>
 #include <cstdlib>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <algorithm>
 
 // Edge definition?
 template <typename Tvertex, typename Tedge>
@@ -29,36 +33,34 @@ class Vertex{
             return v;
         }
 
-        void addEdge(Edge<Tvertex,Tedge> e){         // Add edge
-            edges.push_back(&e);
-            return;
+        void setVertex(Tvertex _v){               // Setter for vertex
+            v = _v;
         }
 
-        /*
-        void removeEdge(Edge<Tvertex, Tedge> e){
-            edges.pop(  )
+        void addEdge(Edge<Tvertex,Tedge>* &e){         // Add edge
+            edges.push_back(e);
         }
-        */
 
         EdgeList incidentEdges(){               // Return incident edges
             return edges; 
         }
 
-        bool isAdjacentTo(Vertex<Tvertex,Tedge> _v){            // Return true if vertex is adjacent to given vertex 'v'
+        bool isAdjacentTo(Vertex<Tvertex,Tedge>* &_v){            // Return true if vertex is adjacent to given vertex 'v'
             
-            if (v == *_v){
+            if (v == *(*_v)){
                 return false;        // Vertex is NOT adjacent to itself
             }
             
-            for(size_t i=0; i < edges.size(); i++){
+            for(int i=0; i<edges.size(); i++){
                 // Choose edge 'e'
-                Edge<Tvertex,Tedge> *e;
+                Edge<Tvertex,Tedge>* e = new Edge<Tvertex,Tedge>;
                 e = edges[i];
+
                 // Iterate through end vertices of 'e' , return true after finding 'v'
-                for (size_t j = 0; j < e->endVertices().size(); j++){
-                    Vertex<Tvertex,Tedge> *u;
+                for (int j=0; j<e->endVertices().size(); j++){
+                    Vertex<Tvertex,Tedge>* u = new Edge<Tvertex,Tedge>;
                     u = e->endVertices()[j];
-                    if(*(*u) == *_v){
+                    if(*(*u) == *(*_v)){
                         return true;
                     }
                 }
@@ -67,19 +69,15 @@ class Vertex{
             return false;
         }
 
-        /*
-        // Disconnects edge from given vertex, but DOES NOT DELETE IT 
-        //helpful for case where edge should still exist, but remove it
-        //from Vertex::edges --- might not be necessary 
-        void disconnectEdge(Edge<Tvertex, Tedge> e){
-            //loop through incident edges to find a match
-            for (size_t i = 0; i < this->incidentEdges().size(); ++i){
-                if (*e == *this->incidentEdges()[i]){
+        void eraseEdge(Edge<Tvertex,Tedge>* e){
+            for (int i=0; i<edges.size(); i++){
+                if (*(*edges[i]) == *(*e)){
                     edges.erase(edges.begin() + i);
+                    break;
                 }
             }
+            return;
         }
-        */
 };
 
 // Edge object
@@ -103,14 +101,18 @@ class Edge{
         Tedge operator*(){          // Dereference
             return e;
         }
-        
-        void addVertex(Vertex<Tvertex,Tedge> v){          // Add vertex
+
+        void setEdge(Tedge _e){               // Setter for Edge
+            e = _e;
+        }
+
+        void addVertex(Vertex<Tvertex,Tedge>* &v){          // Add vertex
             if (vertices.size() == 2){
                 std::cout << "Edge already connected to 2 vertices\n";
                 return;
             }
 
-            vertices.push_back(&v);
+            vertices.push_back(v);
             return;
         }
 
@@ -118,33 +120,33 @@ class Edge{
             return vertices;
         }
 
-        Vertex<Tvertex,Tedge> opposite(Vertex<Tvertex,Tedge> _v){       // Return vertex opposite to vertex given 'v'
+        Vertex<Tvertex,Tedge>* opposite(Vertex<Tvertex,Tedge>* &_v){       // Return vertex opposite to vertex given 'v'
             
-            Vertex<Tvertex,Tedge> oppositeVertex;
-            for (size_t i = 0; i < vertices.size(); i++){
-                if (*(*vertices[i]) != *_v){
-                    oppositeVertex = *vertices[i];
+            for (int i=0; i<vertices.size(); i++){
+                if (*(*vertices[i]) != *(*_v)){
+                    return vertices[i];
                     break;
                 }
             }
 
-            return oppositeVertex;
+            return nullptr;
         }
 
-        bool isAdjacentTo(Edge<Tvertex,Tedge> f){         // Return true if edge is adjacent to given edge 'f'
-            if (*f == e){
+        bool isAdjacentTo(Edge<Tvertex,Tedge>* &f){         // Return true if edge is adjacent to given edge 'e'
+            if (*(*f) == e){
                 return false;    // Edge is NOT adjacent to itself
             }
             
-            for (size_t i = 0; i < vertices.size(); i++){
+            for (int i=0; i<vertices.size(); i++){
                 // Choose vertex 'v'
-                Vertex<Tvertex,Tedge> *v;
+                Vertex<Tvertex,Tedge>* v = new Vertex<Tvertex,Tedge>;
                 v = vertices[i];
 
-                for (size_t j = 0; j < v->incidentEdges().size(); j++){
-                    Edge<Tvertex,Tedge> *tempEdge;
+                // Iterate through all edges of 'v', return true after finding 'f'
+                for (int j=0; j<v->incidentEdges().size(); j++){
+                    Edge<Tvertex,Tedge>* tempEdge = new Edge<Tvertex,Tedge>;
                     tempEdge = v->incidentEdges()[j];
-                    if (*(*tempEdge) == *f){
+                    if (*(*tempEdge) == *(*f)){
                         return true;
                     }
                 }
@@ -154,9 +156,9 @@ class Edge{
         }
 
 
-        bool isIncidentOn(Vertex<Tvertex,Tedge> v){        // Return true if edge is incident on vertex 'v'
-            for (size_t i=0; i<vertices.size(); i++){
-                if (*(*vertices[i]) == *v){
+        bool isIncidentOn(Vertex<Tvertex,Tedge>* &v){        // Return true if edge is incident on vertex 'v'
+            for (int i=0; i<vertices.size(); i++){
+                if (*(vertices[i]) == *(*v)){
                     return true;
                 }
             }
@@ -168,7 +170,6 @@ class Edge{
 // Graph Object
 /*
     - Contains number of vertices currently in graph
-    - Contains number of edges currently in graph
     - Contains vector storing all vertex objects
     - Contains vector storing all edge objects
 */
@@ -178,21 +179,66 @@ class Graph{
         // Number of vertices in the graph
         int n_Vertices = 0;
 
-        // Number of edges in the graph
+        // Number of vertices in the graph
         int n_Edges = 0;
         
         // List of all vertices in the graph
-        typedef std::vector<Vertex<Tvertex,Tedge>> VertexList;
+        typedef std::vector<Vertex<Tvertex,Tedge>*> VertexList;
         VertexList vertex_list;
 
         // List of all edges in the graph
-        typedef std::vector<Edge<Tvertex,Tedge>> EdgeList;
+        typedef std::vector<Edge<Tvertex,Tedge>*> EdgeList;
         EdgeList edge_list;
-
     public:
         Graph(){};       // Default constructor
         Graph(std::string filename){        // Create graph from file
-            std::cout << "Not yet complete :(\n";
+            
+            // Opening file
+            std::ifstream myFile;
+            myFile.open(filename);
+            if (!myFile){
+                std::cout << "File not found! Terminating!\n\n";
+                return;
+            }
+
+            // Variables
+            std::string vertex_u;
+            std::string vertex_v;
+            std::string edge_e;
+            
+            std::string line;
+
+           
+            std::getline(myFile,line);   // Skip first line
+            while (std::getline(myFile,line)){
+                std::istringstream tab_string(line);
+
+                // Extract vertices, edge
+                std::getline(tab_string,vertex_u,'\t');
+                Vertex<std::string,std::string>* u = new Vertex<std::string,std::string>;
+                u->setVertex(vertex_u);
+                
+                std::getline(tab_string,vertex_v,'\t');
+                Vertex<std::string,std::string>* v = new Vertex<std::string,std::string>;
+                v->setVertex(vertex_v);
+                
+                
+                std::getline(tab_string,edge_e,'\t');
+                Edge<std::string,std::string>* e = new Edge<std::string,std::string>;
+                e->setEdge(edge_e);
+                
+                u = insertVertex(u);
+                v = insertVertex(v);
+                e = insertEdge(v,u,e);
+               
+                //std::cout << "Vertex 1: " << *(*u) << " Size: " << u->incidentEdges().size() << "\n";
+                //std::cout << "Vertex 2: " << *(*v) << " Size: " << v->incidentEdges().size() << "\n";
+                //std::cout << "\n\n";
+            }
+
+            std::cout << "\nThank you. Your graph is ready\n\n";
+            myFile.close();
+
         }
 
         VertexList vertices(){            // Return vector of vertices
@@ -211,32 +257,33 @@ class Graph{
             return n_Edges;
         }
 
-        void insertVertex(Vertex<Tvertex,Tedge> v){       // Add Vertex to graph
+        Vertex<Tvertex,Tedge>* insertVertex(Vertex<Tvertex,Tedge>* &v){       // Add Vertex to graph
             // Check if vertex already exists
-            for (size_t i=0; i<vertex_list.size(); i++){
-                if (*v == *vertex_list[i]){
-                    std::cout << "Vertex insert failed: Vertex already exists\n";
-                    return;
+            for (int i=0; i<vertex_list.size(); i++){
+                if (*(*v) == *(*vertex_list[i])){
+                    //std::cout << "Vertex insert failed: Vertex already exists\n";
+                    return vertex_list[i];
                 }
             }
             vertex_list.push_back(v);
             n_Vertices++;
-            std::cout << "Vertex successfully added\n";
+           //std::cout << "Vertex successfully added\n";
+            return v;
         }
 
-        void insertEdge(Vertex<Tvertex,Tedge> v, Vertex<Tvertex,Tedge> u, Edge<Tvertex,Tedge> x){    // Add edge to graoh
+        Edge<Tvertex,Tedge>* insertEdge(Vertex<Tvertex,Tedge>* &v, Vertex<Tvertex,Tedge>* &u, Edge<Tvertex,Tedge>* &x){    // Add edge to graoh
             // Check if edge already exists
-            for (size_t i=0; i<edge_list.size(); i++){
-                if (*x == *edge_list[i]){
+            for (int i=0; i<edge_list.size(); i++){
+                if (*(*x) == *(*edge_list[i])){
                     std::cout << "Edge insert failed: Edge already exists\n";
-                    return;
+                    return edge_list[i];
                 }
             }
 
             // Check if v1 exists
             bool vertex1 = false;
-            for (size_t i=0; i<vertex_list.size(); i++){
-                if (*v == *vertex_list[i]){
+            for (int i=0; i<vertex_list.size(); i++){
+                if (*(*v) == *(*vertex_list[i])){
                     vertex1 = true;
                     break;
                 }
@@ -244,8 +291,8 @@ class Graph{
 
             // Check if v2 exists
             bool vertex2 = false;
-            for (size_t i=0; i<vertex_list.size(); i++){
-                if (*u == *vertex_list[i]){
+            for (int j=0; j<vertex_list.size(); j++){
+                if (*(*u) == *(*vertex_list[j])){
                     vertex2 = true;
                     break;
                 }
@@ -253,55 +300,148 @@ class Graph{
 
             // Add edge
             if (vertex1 && vertex2){
-                x.addVertex(v);
-                x.addVertex(u);
-                v.addEdge(x);
-                u.addEdge(x);
+                x->addVertex(v);
+                x->addVertex(u);
+                v->addEdge(x);
+                u->addEdge(x);
                 edge_list.push_back(x);
                 n_Edges++;
-                std::cout << "Edge insert successful\n";
-                return;
+                //std::cout << "Edge insert successful\n";
+                return x;
             }else{
                 std::cout << "Edge insert failed: Vertices do not exist\n";
             }
 
-            return;
+            return nullptr;
         }
 
-        /*
-        void eraseVertex(Vertex<Tvertex,Tedge> v){
-            // Disconnect edges from end vertices, and remove them
-            Vertex<Tvertex, Tedge>* v_ptr = nullptr; // to not loose track of selected vertex
-            size_t v_index; // for deleting (erase()) the vertex from the vector
-
-            //find if vertex v is in vertex_list
-            for (size_t i = 0; i < vertex_list.size(); ++i){
-                if (*vertex_list[i] == *v){
-                    v_ptr = &vertex_list[i];
-                    v_index = i;
+        void eraseVertex(Vertex<Tvertex,Tedge>* &v){
+            // Check if vertex exists
+            Vertex<std::string,std::string>* tempv1 = new Vertex<std::string,std::string>;
+            bool found = false;
+            for (int i=0; i<numVertices(); i++){
+                if (*(*vertex_list[i]) == *(*v)){
+                    found = true;
+                    tempv1= vertex_list[i];
                     break;
                 }
             }
-
-            if (v_ptr = nullptr){
-                std::cout << "Vertex not found!" << std::endl;
+            if (found == false){
+                std::cout << "Vertex does not exist\n";
                 return;
             }
 
-            // loop through incident edges of v, deleting them along the way
-            for (size_t i = 0; i < (*v_ptr).incidentEdges().size(); ++i){
-                Edge<Tvertex, Tedge>* e;
-                while(!(*v_ptr).edges.empty()){
-                    edges.pop_back();
-                }
+            // Disconnect edges from end vertices, and remove them
+            for (int i=0; i<tempv1->incidentEdges().size(); i++){
+                // Edge to be removed
+                Edge<std::string,std::string>* tempEdge = new Edge<std::string,std::string>;
+                tempEdge = tempv1->incidentEdges()[i];
 
+                // Opposite vertex
+                Vertex<std::string,std::string>* tempv2= new Vertex<std::string,std::string>;
+                tempv2 = tempEdge->opposite(tempv1);
+
+                // Erase edge from opposite vertex
+                tempv2->eraseEdge(tempEdge);
+
+                // Erase edge from current vertex
+                tempv1->eraseEdge(tempEdge);
+
+                // Erase edge from graph
+                for (int j=0 ; j<edge_list.size(); j++){
+                    if (*(*edge_list[j]) == *(*tempEdge)){
+                        edge_list.erase(edge_list.begin() + j);
+                        delete tempEdge;
+                        n_Edges--;
+                        break;
+                    }
+                }
+                
             }
 
 
             // Remove vertex
-            // Deal with disconnected vertices? // use pointer to not lose track
+            for (int i=0 ; i<vertex_list.size(); i++){
+                if (*(*vertex_list[i]) == *(*v)){
+                    vertex_list.erase(vertex_list.begin() + i);
+                    n_Vertices--;
+                    break;
+                }
+            }
+
+            delete v;
         }
-        */
+
+        
+        void printDetails(Tvertex data){
+            Vertex<Tvertex,Tedge>* v =  new Vertex<Tvertex,Tedge>;
+            int i;
+            for (i=0; i<vertex_list.size(); i++){
+                if (*(*vertex_list[i]) == data){
+                    v = vertex_list[i];
+                    break;
+                }
+            }
+
+            if (i==vertex_list.size()){
+                std::cout << "Vertex not found!\n";
+                return;
+            }
+
+            for (int j=0; j<v->incidentEdges().size(); j++){
+                Edge<Tvertex,Tedge>* newEdge = new Edge<Tvertex,Tedge>;
+                newEdge = v->incidentEdges()[j];
+                if (*(*(newEdge->endVertices()[0])) == data){
+                    std::cout << data << " to " << *(*(newEdge->endVertices()[1])) << " is " << *(*newEdge) << "\n";
+                }else{
+                    std::cout << data << " to " << *(*(newEdge->endVertices()[0])) << " is " << *(*newEdge) << "\n";
+                }
+            }
+            std::cout << "\n";
+            return;
+        }
+
+        bool DFS(Vertex<Tvertex,Tedge>* &v, Vertex<Tvertex,Tedge>* &goal, std::vector<Vertex<Tvertex,Tedge>*> &visited, std::vector<Vertex<Tvertex,Tedge>*> &path){
+        visited.push_back(v);
+
+            if (*(*v) == *(*goal)){
+                path.push_back(v);
+                return true;
+            }
+
+            for (int i=0; i<v->incidentEdges().size(); i++){
+                Edge<Tvertex,Tedge>* e = new Edge<Tvertex,Tedge>;
+                e = v->incidentEdges()[i];
+
+                Vertex<Tvertex,Tedge>* u = new Vertex<Tvertex,Tedge>;
+                u = e->opposite(v);
+
+                if(std::find(visited.begin(), visited.end(), u) == visited.end()){
+                    if(DFS(u, goal, visited, path)){
+                        path.push_back(v);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        std::vector<Vertex<Tvertex,Tedge>*> findPath(Vertex<Tvertex,Tedge>* &start, Vertex<Tvertex,Tedge>* &goal){
+            std::vector<Vertex<Tvertex,Tedge>*> visited;
+            std::vector<Vertex<Tvertex,Tedge>*> path;
+
+             DFS(start, goal, visited, path);
+
+            if(path.empty()){
+                std::cout << "No path found" << std::endl;
+                return {};
+            }
+
+            std::reverse(path.begin(), path.end());
+            return path;
+        }
+        
 
 };
 
