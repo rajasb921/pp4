@@ -50,6 +50,10 @@ int main(){
 
     Graph<std::string, float> graph1("input.txt");
 
+    std::cout << "IN MAIN: ALL VERTICIES IN Graph::vertex_list:\n";
+    for (size_t i = 0; i < graph1.numVertices(); ++i){
+        std::cout << *(graph1.vertices()[i]) << std::endl;
+    }
 
     return EXIT_SUCCESS;
 }

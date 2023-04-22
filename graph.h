@@ -28,7 +28,7 @@ class Vertex{
             edges = _edges;
         }
 
-        Tedge operator*(){                      // Dereference
+        Tvertex operator*(){                      // Dereference
             return v;
         }
 
@@ -179,26 +179,64 @@ class Graph{
     public:
         Graph(){};       // Default constructor
         Graph(std::string filename){        // Create graph from file
+
+            void trim(std::string& str);
             
             std::ifstream iFile(filename);
             if(!iFile.is_open()) std::cout << "ERROR: File not read!\n";
 
-            std::string line_buff, temp_buff, v_buff, e_buff;
+            std::string line_buff, temp_buff, v1_buff, v2_buff, e_buff;
 
-            Vertex<std::string, float> vertex(v_buff);
+            Vertex<std::string, float> vertex;
+
+            // ------ Line 1 -----------
 
             getline(iFile, line_buff); //first line of input.txt
             std::istringstream stream(line_buff);
 
             //Read in all values of first line
-            do{
+            while(getline(stream, temp_buff, ',')){
+                trim(temp_buff);
                 std::cout << "temp_buff:" << temp_buff << std::endl;
                 vertex.set_v(temp_buff);
                 insertVertex(vertex);
-            } while(getline(stream, temp_buff, ','));
-        
+            }
 
-        
+            // -----Lines 2-n -------
+            std::cout << "Rest of the lines" << std::endl;
+
+            int i = 0;
+            while(!iFile.eof()){
+                getline(iFile, line_buff);
+                std::istringstream stream(line_buff);
+
+                //get v and e
+                std::cout << "\n------ The 3 getline's (" << i << ")-----" << std::endl;
+                getline(stream, v1_buff, '\t');
+                getline(stream, v2_buff, '\t');
+                getline(stream, e_buff, '\t');
+                std::cout << "v1_buff=" << v1_buff << std::endl;
+                std::cout << "v2_buff=" << v2_buff << std::endl;
+                std::cout << "e_buff=" << e_buff << std::endl;
+
+
+                //convert e_buff (string) to e_float (float)
+                float e_float = std::stof(e_buff);
+                std::cout << "e_float=" << e_float << std::endl;
+                
+                //make verticies 
+                Vertex<std::string, float> v1(v1_buff);
+                Vertex<std::string, float> v2(v2_buff);
+
+                //make edge (first make "verticies")
+                Edge<std::string, float> e(e_float);
+
+                this->insertVertex(v1);
+                this->insertVertex(v2);
+
+                this->insertEdge(v1, v2, e);
+                i++;
+            }
 
         }
 
@@ -227,6 +265,7 @@ class Graph{
                     return;
                 }
             }
+            std::cout << "insertVertex(): *v = " << *v << std::endl;
             vertex_list.push_back(v);
             n_Vertices++;
             std::cout << "Vertex successfully added\n";
@@ -283,5 +322,16 @@ class Graph{
         }
 
 };
+
+//trim leading and trailing whitespaces
+void trim(std::string& str){
+    size_t size = str.find_first_not_of(" \t");
+    str.erase(0, size);
+
+    size = str.find_last_not_of(" \t");
+    if (std::string::npos != size)
+    str.erase(size+1);
+}
+
 
 #endif
