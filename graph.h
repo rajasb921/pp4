@@ -199,7 +199,7 @@ class Graph{
                 trim(temp_buff);
                 std::cout << "temp_buff:" << temp_buff << std::endl;
                 vertex.set_v(temp_buff);
-                insertVertex(vertex);
+                this->insertVertex(vertex);
             }
 
             // -----Lines 2-n -------
@@ -230,9 +230,6 @@ class Graph{
 
                 //make edge (first make "verticies")
                 Edge<std::string, float> e(e_float);
-
-                this->insertVertex(v1);
-                this->insertVertex(v2);
 
                 this->insertEdge(v1, v2, e);
                 i++;
