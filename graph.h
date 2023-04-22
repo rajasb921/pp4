@@ -2,6 +2,9 @@
 #define GRAPH_H
 #include <vector>
 #include <cstdlib>
+#include <string>
+#include <fstream>
+#include <sstream>
 
 // Edge definition?
 template <typename Tvertex, typename Tedge>
@@ -65,6 +68,10 @@ class Vertex{
             }
             
             return false;
+        }
+
+        void set_v(Tvertex _v){
+            v = _v;
         }
 
         /*
@@ -192,8 +199,64 @@ class Graph{
     public:
         Graph(){};       // Default constructor
         Graph(std::string filename){        // Create graph from file
-            std::cout << "Not yet complete :(\n";
+
+            void trim(std::string& str);
+            
+            std::ifstream iFile(filename);
+            if(!iFile.is_open()) std::cout << "ERROR: File not read!\n";
+
+            std::string line_buff, temp_buff, v1_buff, v2_buff, e_buff;
+
+            Vertex<std::string, float> vertex;
+
+            // ------ Line 1 -----------
+
+            getline(iFile, line_buff); //first line of input.txt
+            std::istringstream stream(line_buff);
+
+            //Read in all values of first line
+            while(getline(stream, temp_buff, ',')){
+                trim(temp_buff);
+                std::cout << "temp_buff:" << temp_buff << std::endl;
+                vertex.set_v(temp_buff);
+                this->insertVertex(vertex);
+            }
+
+            // -----Lines 2-n -------
+            std::cout << "Rest of the lines" << std::endl;
+
+            int i = 0;
+            while(!iFile.eof()){
+                getline(iFile, line_buff);
+                std::istringstream stream(line_buff);
+
+                //get v and e
+                std::cout << "\n------ The 3 getline's (" << i << ")-----" << std::endl;
+                getline(stream, v1_buff, '\t');
+                getline(stream, v2_buff, '\t');
+                getline(stream, e_buff, '\t');
+                std::cout << "v1_buff=" << v1_buff << std::endl;
+                std::cout << "v2_buff=" << v2_buff << std::endl;
+                std::cout << "e_buff=" << e_buff << std::endl;
+
+
+                //convert e_buff (string) to e_float (float)
+                float e_float = std::stof(e_buff);
+                std::cout << "e_float=" << e_float << std::endl;
+                
+                //make verticies 
+                Vertex<std::string, float> v1(v1_buff);
+                Vertex<std::string, float> v2(v2_buff);
+
+                //make edge (first make "verticies")
+                Edge<std::string, float> e(e_float);
+                this->insertEdge(v1, v2, e);
+
+                i++;
+            }
+
         }
+
 
         VertexList vertices(){            // Return vector of vertices
             return vertex_list;
@@ -213,12 +276,13 @@ class Graph{
 
         void insertVertex(Vertex<Tvertex,Tedge> v){       // Add Vertex to graph
             // Check if vertex already exists
-            for (size_t i=0; i<vertex_list.size(); i++){
+            for (size_t i=0; i < vertex_list.size(); i++){
                 if (*v == *vertex_list[i]){
                     std::cout << "Vertex insert failed: Vertex already exists\n";
                     return;
                 }
             }
+            std::cout << "insertVertex(): *v = " << *v << std::endl;
             vertex_list.push_back(v);
             n_Vertices++;
             std::cout << "Vertex successfully added\n";
@@ -233,25 +297,32 @@ class Graph{
                 }
             }
 
+            std::cout << "\nInside insertEdge():\n";
             // Check if v1 exists
             bool vertex1 = false;
-            for (size_t i=0; i<vertex_list.size(); i++){
+            for (int i=0; i<vertex_list.size(); i++){
+                std::cout << "*v=" << *v << std::endl;
+                std::cout << "*vertex_list (at i=" << i << ")=" << *vertex_list[i] << std::endl;
                 if (*v == *vertex_list[i]){
                     vertex1 = true;
+                    std::cout << "FOUND!" << std::endl;
                     break;
                 }
             }
 
             // Check if v2 exists
             bool vertex2 = false;
-            for (size_t i=0; i<vertex_list.size(); i++){
+            for (int i=0; i<vertex_list.size(); i++){
+                std::cout << "*u=" << *u << std::endl;
+                std::cout << "*vertex_list (at i=" << i << ")=" << *vertex_list[i] << std::endl;
                 if (*u == *vertex_list[i]){
                     vertex2 = true;
+                    std::cout << "FOUND!" << std::endl;
                     break;
                 }
             }
 
-            // Add edge
+            // Add edgeRun
             if (vertex1 && vertex2){
                 x.addVertex(v);
                 x.addVertex(u);
@@ -259,10 +330,18 @@ class Graph{
                 u.addEdge(x);
                 edge_list.push_back(x);
                 n_Edges++;
-                std::cout << "Edge insert successful\n";
+                std::cout << "Edge insert successful\n"; //Move/rename a branch, together with
                 return;
             }else{
                 std::cout << "Edge insert failed: Vertices do not exist\n";
+
+                std::cout << "     Start of test\n";
+                std::cout << "*v=" << *v << ", " << "(*v).length()=" << (*v).length() << std::endl;
+                std::cout << "*u=" << *u << ", " << "(*u).length()=" << (*u).length() << std::endl;
+                for (int i=0; i<vertex_list.size(); i++){
+                    std::cout << "*vertex_list[i]=" << *vertex_list[i];
+                    std::cout << ", " << ".length()=" << (*vertex_list[i]).length() << std::endl;
+                }
             }
 
             return;
@@ -304,5 +383,16 @@ class Graph{
         */
 
 };
+
+//trim leading and trailing whitespaces
+void trim(std::string& str){
+    size_t size = str.find_first_not_of(" \t");
+    str.erase(0, size);
+
+    size = str.find_last_not_of(" \t");
+    if (std::string::npos != size)
+    str.erase(size+1);
+}
+
 
 #endif

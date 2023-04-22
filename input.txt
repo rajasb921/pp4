@@ -4,4 +4,4 @@ USF	Stadium	1.8 mi
 Starbucks	Bus Stop	8.4 mi
 USF	Starbucks	0.27mi
 Starbucks	Stadium	0.32mi
-Bus Stop	Stadium	4.72 m
+Bus Stop	Stadium	4.72 mi
