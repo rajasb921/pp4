@@ -6,46 +6,61 @@
 
 int main(){
 
-    Graph<std::string,std::string> g = Graph<std::string,std::string>();
-    
-    // Vertices
-    Vertex<std::string,std::string> A("A");
-    Vertex<std::string,std::string> B("B");
-    Vertex<std::string,std::string> C("C");
-    Vertex<std::string,std::string> D("D");
-    Vertex<std::string,std::string> E("E");
+    std::string filename;
 
-    // Add vertices
-    g.insertVertex(A);
-    g.insertVertex(B);
-    g.insertVertex(C);
-    g.insertVertex(D);
-    g.insertVertex(E);
+    std::cout << "Hello!\n";
+    std::cout << "Enter the file name: ";
+    std::cin >> filename;
+    Graph<std::string,std::string> G(filename);
 
-    // Edges
-    Edge<std::string,std::string> ab("ab");
-    Edge<std::string,std::string> bc("bc");
-    Edge<std::string,std::string> be("be");
-    Edge<std::string,std::string> ce("ce");
-    Edge<std::string,std::string> ed("ed");
-    Edge<std::string,std::string> cd("cd");
+    std::cout << "Thank you. Your graph is ready.\n"
+    "------------\n"
+    "What would you like to do?\n"
+    "------------\n"
 
-    // Add edges
-    g.insertEdge(A,B,ab);
-    g.insertEdge(B,C,bc);
-    g.insertEdge(B,E,be);
-    g.insertEdge(C,E,ce);
-    g.insertEdge(E,D,ed);
-    g.insertEdge(C,D,cd);
+    "1. Find edges incident on a vertex\n"
+    "2. Find a path in the graph\n"
+    "3. Insert an edge\n"
+    "4. Erase a vertex\n"
+    "5. Quit program\n";
 
-    std::cout << g.numVertices() <<" Vertices:\n";
-    for (size_t i=0; i<g.vertices().size(); i++){
-        std::cout << *(g.vertices()[i]) << "\n";
+    int choice = 0;
+    while (choice != 5){
+        
+        std::cout << "Input: ";
+        std::cin >> choice;
+        switch (choice){
+            case 1:
+                std::cout << "case 1\n";
+                break;
+            case 2:
+                std::cout << "case 2\n";
+                break;
+            case 3:
+                std::cout << "case 3\n";
+                break;
+            case 4:
+                std::cout << "case 4\n";
+                break;
+            case 5:
+                std::cout << "case 5\n";
+                break;
+            default:
+                std::cout << "Invalid input. Try again.\n";
+                break;
+
+
+        }
     }
 
-    std::cout << g.numEdges() <<" Edges:\n";
-    for (size_t i=0; i<g.edges().size(); i++){
-        std::cout << *(g.edges()[i]) << "\n";
+    std::cout << G.numVertices() <<" Vertices:\n";
+    for (size_t i=0; i<G.vertices().size(); i++){
+        std::cout << *(G.vertices()[i]) << "\n";
+    }
+
+    std::cout << G.numEdges() <<" Edges:\n";
+    for (size_t i=0; i<G.edges().size(); i++){
+        std::cout << *(G.edges()[i]) << "\n";
     }
     return EXIT_SUCCESS;
 }
