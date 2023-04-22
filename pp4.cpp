@@ -11,7 +11,7 @@ int main(){
     std::cout << "Hello!\n";
     std::cout << "Enter the file name: ";
     std::cin >> filename;
-    Graph<std::string,std::string> G(filename);
+    Graph<std::string, float> G(filename);
 
     std::cout << "Thank you. Your graph is ready.\n"
     "------------\n"
@@ -66,7 +66,7 @@ int main(){
     Graph<std::string, float> graph1("input.txt");
 
     std::cout << "\nIN MAIN: ALL VERTICIES IN Graph::vertex_list:\n";
-    for (size_t i = 0; i < graph1.numVertices(); ++i){
+    for (int i = 0; i < graph1.numVertices(); ++i){
         std::cout << *(graph1.vertices()[i]) << std::endl;
     }
 
