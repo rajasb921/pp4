@@ -5,88 +5,135 @@
 #include "graph.h"
 
 int main(){
-
-    Graph<std::string,std::string> g = Graph<std::string,std::string>();
     
-    // Vertices
-    Vertex<std::string,std::string> A("A");
-    Vertex<std::string,std::string> B("B");
-    Vertex<std::string,std::string> C("C");
-    Vertex<std::string,std::string> D("D");
-    Vertex<std::string,std::string> E("E");
+    // File input
+    std::cout << "\nHello!\n\n";
+    std::string filename;
+    std::cout << "Enter the filename: ";
+    std::cin >> filename;
+    Graph<std::string,std::string> g(filename);
+    
+    // Main function loop
+    bool flag = true;
+    while(flag){
+        std::cout << "--------------------------\nWhat would you like to do?\n--------------------------\n";
+        std::cout << "1. Find edges incident on a vertex\n2. Find a path in the graph\n3. Insert an edge\n4. Erase a vertex\n\n";
+        int option = 0;
+        while (option < 1 || option > 4){
+            std::cout << "Enter option number (1-4): ";
+            std::cin >> option;
+            if (option == 1){
+                std::string label;
+                std::cout << "Enter label of vertex you would like to explore: ";
+                while (label.size() == 0){
+                    std::getline(std::cin,label);
+                };
+                g.printDetails(label);
+            }else if (option == 2){
+                
+                // Create v1
+                std::string label1;
+                Vertex<std::string,std::string>* v1 = new Vertex<std::string,std::string>;
+                std::cout << "Enter label of the beginning vertex: ";
+                while (label1.size() == 0){
+                    std::getline(std::cin,label1);
+                }
+                for (int i=0; i<g.numVertices(); i++){
+                    if (*(*g.vertices()[i]) == label1){
+                        v1 = g.vertices()[i];
+                        break;
+                    }
+                }
 
-    // Add vertices
-    g.insertVertex(A);
-    g.insertVertex(B);
-    g.insertVertex(C);
-    g.insertVertex(D);
-    g.insertVertex(E);
+                // Create v2
+                std::string label2;
+                Vertex<std::string,std::string>* v2 = new Vertex<std::string,std::string>;
+                std::cout << "Enter label of the end vertex: ";
+                while (label2.size() == 0){
+                    std::getline(std::cin,label2);
+                };
+                for (int i=0; i<g.numVertices(); i++){
+                    if (*(*g.vertices()[i]) == label2){
+                        v2 = g.vertices()[i];
+                        break;
+                    }
+                }
 
-    // Edges
-    Edge<std::string,std::string> ab("ab");
-    Edge<std::string,std::string> bc("bc");
-    Edge<std::string,std::string> be("be");
-    Edge<std::string,std::string> ce("ce");
-    Edge<std::string,std::string> ed("ed");
-    Edge<std::string,std::string> cd("cd");
+                // Find path 
+                std::vector<Vertex<std::string,std::string>*> path = g.findPath(v1,v2);
 
-    // Add edges
-    g.insertEdge(A,B,ab);
-    g.insertEdge(B,C,bc);
-    g.insertEdge(B,E,be);
-    g.insertEdge(C,E,ce);
-    g.insertEdge(E,D,ed);
-    g.insertEdge(C,D,cd);
+                // Print path
+                for (int i=0; i<path.size()-1; i++){
+                    std::cout << *(*path[i]) << " to ";
+                }
+                std::cout << (*(*path[path.size()-1])) << "\n";
 
-    std::cout << g.numVertices() <<" Vertices:\n";
-    for (size_t i=0; i<g.vertices().size(); i++){
-        std::cout << *(g.vertices()[i]) << "\n";
+            }else if (option == 3){
+
+                // Create edge
+                Edge<std::string,std::string>* e = new Edge<std::string,std::string>;
+                std::string edgeLabel;
+                std::cout << "Enter label of the edge you would like to add: ";
+                while (edgeLabel.size() == 0){
+                    std::getline(std::cin,edgeLabel);
+                };
+                e->setEdge(edgeLabel);
+
+                // Create vertex 1
+                Vertex<std::string,std::string>* v1 = new Vertex<std::string,std::string>;
+                std::string v1Label;
+                std::cout << "Enter label of the first vertex: ";
+                while (v1Label.size() == 0){
+                    std::getline(std::cin,v1Label);
+                };
+                v1->setVertex(v1Label);
+
+                // Create vertex 2
+                Vertex<std::string,std::string>* v2 = new Vertex<std::string,std::string>;
+                std::string v2Label;
+                std::cout << "Enter label of the second vertex: ";
+                while (v2Label.size() == 0){
+                    std::getline(std::cin,v2Label);
+                };
+                v2->setVertex(v2Label);
+
+                // Insert edge
+                g.insertEdge(v1,v2,e);
+                
+            }else if (option == 4){
+
+                // Create vertex
+                Vertex<std::string,std::string>* v = new Vertex<std::string,std::string>;
+                std::string label;
+                std::cout << "Enter label of the vertex you would like to delete: ";
+                while (label.size() == 0){
+                    std::getline(std::cin,label);
+                };
+                v->setVertex(label);
+
+                // Erase vertex
+                g.eraseVertex(v);
+
+            }else{
+                std::cout << "Invalid option\n";
+            }
+        }
+        
+   
+        char check;
+        while (check != 'y' || check != 'n'){
+            std::cout << "Would you like to continue? (y/n): ";
+            std::cin >> check;
+            if (check == 'n'){
+                flag = false;
+                break;
+            }else{
+                break;
+            }
+        }
+
+        
     }
-
-    std::cout << g.numEdges() <<" Edges:\n";
-    for (size_t i=0; i<g.edges().size(); i++){
-        std::cout << *(g.edges()[i]) << "\n";
-    }
+    
     return EXIT_SUCCESS;
 }
-
-/*
-    // Define types
-    typedef std::vector<Edge<std::string,std::string>*> el;
-    typedef std::vector<Vertex<std::string,std::string>*> vl;
-
-    // Vertices
-    Vertex<std::string,std::string> A("A");
-    Vertex<std::string,std::string> B("B");
-    Vertex<std::string,std::string> C("C");
-    Vertex<std::string,std::string> D("D");
-    Vertex<std::string,std::string> E("E");
-
-    // Edges
-    Edge<std::string,std::string> ab("ab",{&A,&B});
-    Edge<std::string,std::string> bc("bc",{&B,&C});
-    Edge<std::string,std::string> be("be",{&B,&E});
-    Edge<std::string,std::string> ce("ce",{&C,&E});
-    Edge<std::string,std::string> ed("ed",{&E,&D});
-    Edge<std::string,std::string> cd("cd",{&C,&D});
-    
-    // Connecting vertices and edges
-    A.addEdge(ab);
-    B.addEdge(bc);
-    B.addEdge(be);
-    C.addEdge(bc);
-    C.addEdge(ce);
-    C.addEdge(cd);
-    D.addEdge(cd);
-    D.addEdge(ed);
-    E.addEdge(ed);
-    E.addEdge(ce);
-    E.addEdge(be);
-
-
-    // Output
-    std::cout << *ab << "\n";
-    std::cout << *ab.opposite(A) << "\n";
-    std::cout << ab.isAdjacentTo(bc) << "\n";
-    std::cout << ab.isIncidentOn(C) << "\n";
-*/
