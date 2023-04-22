@@ -70,11 +70,10 @@ class Vertex{
             return false;
         }
 
-<<<<<<< HEAD
         void set_v(Tvertex _v){
             v = _v;
         }
-=======
+
         /*
         // Disconnects edge from given vertex, but DOES NOT DELETE IT 
         //helpful for case where edge should still exist, but remove it
@@ -88,7 +87,6 @@ class Vertex{
             }
         }
         */
->>>>>>> main
 };
 
 // Edge object
@@ -278,11 +276,7 @@ class Graph{
 
         void insertVertex(Vertex<Tvertex,Tedge> v){       // Add Vertex to graph
             // Check if vertex already exists
-<<<<<<< HEAD
             for (size_t i=0; i < vertex_list.size(); i++){
-=======
-            for (size_t i=0; i<vertex_list.size(); i++){
->>>>>>> main
                 if (*v == *vertex_list[i]){
                     std::cout << "Vertex insert failed: Vertex already exists\n";
                     return;
@@ -306,13 +300,9 @@ class Graph{
             std::cout << "\nInside insertEdge():\n";
             // Check if v1 exists
             bool vertex1 = false;
-<<<<<<< HEAD
             for (int i=0; i<vertex_list.size(); i++){
                 std::cout << "*v=" << *v << std::endl;
                 std::cout << "*vertex_list (at i=" << i << ")=" << *vertex_list[i] << std::endl;
-=======
-            for (size_t i=0; i<vertex_list.size(); i++){
->>>>>>> main
                 if (*v == *vertex_list[i]){
                     vertex1 = true;
                     std::cout << "FOUND!" << std::endl;
@@ -322,13 +312,9 @@ class Graph{
 
             // Check if v2 exists
             bool vertex2 = false;
-<<<<<<< HEAD
             for (int i=0; i<vertex_list.size(); i++){
                 std::cout << "*u=" << *u << std::endl;
                 std::cout << "*vertex_list (at i=" << i << ")=" << *vertex_list[i] << std::endl;
-=======
-            for (size_t i=0; i<vertex_list.size(); i++){
->>>>>>> main
                 if (*u == *vertex_list[i]){
                     vertex2 = true;
                     std::cout << "FOUND!" << std::endl;
@@ -348,12 +334,14 @@ class Graph{
                 return;
             }else{
                 std::cout << "Edge insert failed: Vertices do not exist\n";
-                std::cout << "*v=" << *v << std::endl;
-                std::cout << "*u=" << *u << std::endl;
-                for (int i=0; i<vertex_list.size(); i++){
-                    std::cout << "*vertex_list[i]=" << *vertex_list[i] << std::endl;
-                }
 
+                std::cout << "     Start of test\n";
+                std::cout << "*v=" << *v << ", " << "(*v).length()=" << (*v).length() << std::endl;
+                std::cout << "*u=" << *u << ", " << "(*u).length()=" << (*u).length() << std::endl;
+                for (int i=0; i<vertex_list.size(); i++){
+                    std::cout << "*vertex_list[i]=" << *vertex_list[i];
+                    std::cout << ", " << ".length()=" << (*vertex_list[i]).length() << std::endl;
+                }
             }
 
             return;
