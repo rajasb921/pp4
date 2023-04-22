@@ -39,12 +39,12 @@ int main(){
     g.insertEdge(C,D,cd);
 
     std::cout << g.numVertices() <<" Vertices:\n";
-    for (int i=0; i<g.vertices().size(); i++){
+    for (size_t i=0; i<g.vertices().size(); i++){
         std::cout << *(g.vertices()[i]) << "\n";
     }
 
     std::cout << g.numEdges() <<" Edges:\n";
-    for (int i=0; i<g.edges().size(); i++){
+    for (size_t i=0; i<g.edges().size(); i++){
         std::cout << *(g.edges()[i]) << "\n";
     }
 
