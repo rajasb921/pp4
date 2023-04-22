@@ -63,7 +63,7 @@ int main(){
                 std::vector<Vertex<std::string,std::string>*> path = g.findPath(v1,v2);
 
                 // Print path
-                for (int i=0; i<path.size()-1; i++){
+                for (size_t i=0; i<path.size()-1; i++){
                     std::cout << *(*path[i]) << " to ";
                 }
                 std::cout << (*(*path[path.size()-1])) << "\n";
