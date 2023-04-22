@@ -34,9 +34,11 @@ class Vertex{
             return;
         }
 
+        /*
         void removeEdge(Edge<Tvertex, Tedge> e){
             edges.pop(  )
         }
+        */
 
         EdgeList incidentEdges(){               // Return incident edges
             return edges; 
