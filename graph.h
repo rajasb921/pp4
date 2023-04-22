@@ -285,6 +285,7 @@ class Graph{
                 std::cout << "*vertex_list (at i=" << i << ")=" << *vertex_list[i] << std::endl;
                 if (*v == *vertex_list[i]){
                     vertex1 = true;
+                    std::cout << "FOUND!" << std::endl;
                     break;
                 }
             }
@@ -296,6 +297,7 @@ class Graph{
                 std::cout << "*vertex_list (at i=" << i << ")=" << *vertex_list[i] << std::endl;
                 if (*u == *vertex_list[i]){
                     vertex2 = true;
+                    std::cout << "FOUND!" << std::endl;
                     break;
                 }
             }
@@ -312,6 +314,12 @@ class Graph{
                 return;
             }else{
                 std::cout << "Edge insert failed: Vertices do not exist\n";
+                std::cout << "*v=" << *v << std::endl;
+                std::cout << "*u=" << *u << std::endl;
+                for (int i=0; i<vertex_list.size(); i++){
+                    std::cout << "*vertex_list[i]=" << *vertex_list[i] << std::endl;
+                }
+
             }
 
             return;
